@@ -5,6 +5,7 @@ import java.util.Date;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Transient;
 
 @Entity("usuarios")
 public class Usuario {
@@ -18,6 +19,9 @@ public class Usuario {
 	private String cpfCnpj;
 	private Date dataNascimento;
 	private Date dataRegistro;
+	
+	@Transient
+	private String token;
 	
 	public ObjectId getId() {
 		return id;
@@ -72,6 +76,12 @@ public class Usuario {
 		return "Usuario [id=" + id + ", urlFoto=" + urlFoto + ", nome=" + nome + ", sobrenome=" + sobrenome
 				+ ", nomeEmpresa=" + nomeEmpresa + ", cpfCnpj=" + cpfCnpj + ", dataNascimento=" + dataNascimento
 				+ ", dataRegistro=" + dataRegistro + "]";
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 	
