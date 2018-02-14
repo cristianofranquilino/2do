@@ -9,7 +9,7 @@ public class CredentialsNotFoundException extends Exception {
 
 	@Override
 	public String getMessage(){
-		return "{msg : 'Login não encontrado.'}";
+		return "Login não encontrado.";
 	}
 	
 }

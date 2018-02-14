@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import br.com.todoservices.api.LoginApi;
+import br.com.todoservices.api.MailApi;
 import br.com.todoservices.api.TokenAPI;
 import br.com.todoservices.auth.Sessao;
 import br.com.todoservices.auth.Token;
@@ -12,13 +13,17 @@ import br.com.todoservices.exception.CredentialsNotFoundException;
 import br.com.todoservices.exception.WrongCredentialsException;
 import br.com.todoservices.model.Login;
 import br.com.todoservices.model.Usuario;
+import br.com.todoservices.utils.AuthUtils;
+import br.com.todoservices.utils.Utils;
 
 public class LoginService {
 
 	private LoginDao dao;
+	private UsuarioService usuarioService;
 	
 	public LoginService(){
 		dao = new LoginDao();
+		usuarioService = new UsuarioService();
 	}
 	
 	public Usuario realizarLogin(Login login) throws Exception {
@@ -46,4 +51,48 @@ public class LoginService {
 		}
 	}
 
+	public boolean isEmailRegistrado(String email) {
+		Login login = new Login(email);
+		return dao.isRegistred(login);
+	}
+
+	public void criar(Usuario usuario) {
+		
+		usuarioService.inserir(usuario); 
+		
+		Login login = usuario.getLogin();
+				
+		if (this.valida(login)){
+			login.setUsuario(usuario);	
+			dao.insert(usuario.getLogin());
+		}else{
+			throw new RuntimeException("Login nulo ou vazio.");
+		}
+	}
+
+	private boolean valida(Login login) {
+		if (Utils.isValido(login)){
+			if (!Utils.isValido(login.getEmail()))
+				return false;
+			if (!Utils.isValido(login.getSenha()))
+				return false;
+			
+			return true;
+		}
+		return false;
+	}
+
+	public void processaEsquecimentoSenha(Login login) throws Exception {
+		Login loginUsuario = dao.getLoginByEmail(login.getEmail());
+		if (loginUsuario != null){
+			String novaSenha = AuthUtils.generateNewPass();
+			System.out.println(novaSenha);
+			loginUsuario.setSenha(novaSenha);
+			loginUsuario.setTrocaSenha(true);
+			dao.atualiza(loginUsuario);
+			MailApi.sendForgotPass(loginUsuario);
+		}else{
+			throw new CredentialsNotFoundException();
+		}
+	}
 }

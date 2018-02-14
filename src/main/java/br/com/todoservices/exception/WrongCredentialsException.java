@@ -9,6 +9,6 @@ public class WrongCredentialsException extends Exception {
 	
 	@Override
 	public String getMessage(){
-		return "{msg : 'Login e/ou senha inválidos'}.";
+		return "Login e/ou senha inválidos";
 	}
 }

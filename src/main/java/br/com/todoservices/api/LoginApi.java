@@ -2,10 +2,8 @@ package br.com.todoservices.api;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Singleton;
@@ -88,8 +86,10 @@ public class LoginApi {
 
 	public static void atualizaAtividade(String _token) {
 		if (Utils.isValido(_token)) {
-			Sessao u = getUsuariosSessao().get(_token);
-			u.setUltimaAtividade(LocalDateTime.now());
+			if (getUsuariosSessao().containsKey(_token)){
+				Sessao u = getUsuariosSessao().get(_token);
+				u.setUltimaAtividade(LocalDateTime.now());
+			}
 		}
 	}
 

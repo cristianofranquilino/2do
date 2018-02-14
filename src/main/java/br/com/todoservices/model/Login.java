@@ -13,10 +13,17 @@ public class Login {
 	private ObjectId id;
 	private String email;
 	private String senha;
+	private boolean trocaSenha;
 	@Property("facebook_id")
 	private String facebookId;
 	@Reference(lazy=false)
 	private Usuario usuario;
+	
+	public Login(String email) {
+		this.email = email;
+	}
+	
+	public Login(){}
 	
 	public ObjectId getId() {
 		return id;
@@ -52,5 +59,13 @@ public class Login {
 	public String toString() {
 		return "Login [id=" + id + ", email=" + email + ", senha=" + senha + ", facebookId=" + facebookId
 				+ ", usuario=" + usuario + "]";
+	}
+
+	public boolean isTrocaSenha() {
+		return trocaSenha;
+	}
+
+	public void setTrocaSenha(boolean trocaSenha) {
+		this.trocaSenha = trocaSenha;
 	}
 }
